@@ -55,12 +55,18 @@ class App extends Component {
       chars: 0
     }
   }
+  increment () {
+    this.setState({
+      ...this.state,
+      chars: this.state.chars + 1
+    })
+  }
   componentWillReceiveProps ({ keydown }) {
     if (keydown.event) {
-      this.setState({
-        ...this.state,
-        chars: this.state.chars + 4
-      })
+      this.increment()
+      setTimeout(this.increment.bind(this), 20)
+      setTimeout(this.increment.bind(this), 40)
+      setTimeout(this.increment.bind(this), 60)
     }
   }
   render () {
