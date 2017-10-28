@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 import Highlight from 'react-highlight'
+import keydown, { ALL_KEYS } from 'react-keydown'
 import './App.css'
 import './atelier-sulphurpool-dark.css'
 
-class App extends Component {
-  render () {
-    return (
-      <div className='App' onKeyPress={this.handleKeyPress}>
-        <Highlight className='perl'>
-          {`
+let data = `
 # loads object
 sub load
 {
@@ -50,11 +46,32 @@ __END__
 
 =head1 NAME
 POD till the end of file
-          `}
+`
+
+class App extends Component {
+  constructor () {
+    super()
+    this.state = {
+      chars: 0
+    }
+  }
+  componentWillReceiveProps ({ keydown }) {
+    if (keydown.event) {
+      this.setState({
+        ...this.state,
+        chars: this.state.chars + 4
+      })
+    }
+  }
+  render () {
+    return (
+      <div className='App'>
+        <Highlight className='perl'>
+          {data.slice(0, this.state.chars)}
         </Highlight>
       </div>
     )
   }
 }
 
-export default App
+export default keydown(ALL_KEYS)(App)
