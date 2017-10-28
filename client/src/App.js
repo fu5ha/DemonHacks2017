@@ -3,12 +3,7 @@ import Highlight from 'react-highlight'
 import './App.css'
 import './atelier-sulphurpool-dark.css'
 
-class App extends Component {
-  render () {
-    return (
-      <div className='App' onKeyPress={this.handleKeyPress}>
-        <Highlight className='perl'>
-          {`
+let data = `
 # loads object
 sub load
 {
@@ -50,7 +45,26 @@ __END__
 
 =head1 NAME
 POD till the end of file
-          `}
+`
+
+class App extends Component {
+  constructor () {
+    super()
+    this.state = {
+      chars: 0
+    }
+  }
+  handleKeyPress (e) {
+    this.setState({
+      ...this.state,
+      this.state.chars + 2
+    })
+  }
+  render () {
+    return (
+      <div className='App' onKeyPress={this.handleKeyPress}>
+        <Highlight className='perl'>
+          {data}
         </Highlight>
       </div>
     )
