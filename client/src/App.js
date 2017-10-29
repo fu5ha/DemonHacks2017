@@ -56,7 +56,9 @@ class App extends React.Component {
       errorMessage: '',
       playerId: -1,
       counter: 5,
-      otherPlayerState: {}
+      otherPlayerState: {},
+      score: 0,
+      otherScore: 0
     }
     api.onPlayerStateChanged(this.onPlayerStateChanged.bind(this))
   }
@@ -115,38 +117,63 @@ class App extends React.Component {
       playerId: data.socketId,
       gameStage: 'lobby'
     })
+    api.onCountdownStarted(this.countdownStarted.bind(this))
     api.onCountdownReceived(this.countDown.bind(this))
     api.onGameStarted(this.gameStarted.bind(this))
   }
   startGameClicked () {
-    api.startCountdown(this.state.gameId)
+    api.onCountdownStarted(this.countdownStarted.bind(this))
     api.onCountdownReceived(this.countDown.bind(this))
     api.onGameStarted(this.gameStarted.bind(this))
+    api.startCountdown(this.state.gameId)
+  }
+  countdownStarted () {
+    this.setState({
+      ...this.state,
+      gameStage: 'countdown'
+    })
   }
   countDown (count) {
     this.setState({
       ...this.state,
-      gameStage: 'countdown',
       counter: count
     })
   }
   gameStarted () {
     this.setState({
       ...this.state,
-      gameStage: 'main'
+      gameStage: 'main',
+      counter: 90
     })
+    api.onGameEnded(this.gameEnded.bind(this))
   }
   playerStateChanged (newState) {
     api.playerStateChanged(this.state.gameId, this.state.playerId, newState)
   }
   onPlayerStateChanged (gameId, playerId, state) {
-    console.log('changed')
     if (playerId !== this.state.playerId) {
       this.setState({
         ...this.state,
         otherPlayerState: state
       })
     }
+  }
+  gameEnded (data) {
+    let score
+    let other
+    Object.keys(data).forEach((key, idx) => {
+      if (key === this.state.playerId) {
+        score = data[key].score
+      } else {
+        other = data[key].score
+      }
+    })
+    this.setState({
+      ...this.state,
+      score: Math.round(score / 1.5 * 10) / 10 + ' cpm',
+      otherScore: Math.round(other / 1.5 * 10) / 10 + ' cpm',
+      gameStage: 'ended'
+    })
   }
   render () {
     if (this.state.gameStage === 'home') {
@@ -159,13 +186,15 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'host') {
       return (
-        <div className ='App'>        
-          <h3 className = 'cGame'>Game ID:</h3>
-          <div className = 'gameID'>
+        <div className='App'>
+          <h3 className='cGame'>Game ID:</h3>
+          <div className='gameID'>
             {this.state.gameId}
           </div>
+          {!this.state.gameCanStart ? <div className='btnDIV'>Waiting for other player!</div> : null}
+          {this.state.gameCanStart ? <div className='btnDIV'>Other player has joined!</div> : null}
           <div className='btnDIV'>
-            <button className ='btnStart' disabled={!this.state.gameCanStart} onClick={this.startGameClicked.bind(this)}>Start Game</button>
+            <button className='btnStart' disabled={!this.state.gameCanStart} onClick={this.startGameClicked.bind(this)}>Start Game</button>
           </div>
         </div>
       )
@@ -177,7 +206,7 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'join') {
       return (
-        <div className ='App'>        
+        <div className='App'>
           <h3 className='cGame'>Input Game ID:</h3>
           <form onSubmit={this.joinGameClicked.bind(this)}>
             <div className='btnDIV2'>
@@ -205,12 +234,40 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'main') {
       return (
-        <div>
-          <div className='typer-left'>
-            <Typer codeData={data} onStateChange={this.playerStateChanged.bind(this)} />
+        <div className='App'>
+          <div className='score'>
+            <div className='score-container'>
+              <h4>YOU</h4>
+              <h4>{this.state.counter}</h4>
+            </div>
+            <div className='score-container'>
+              <h4>YOUR OPPONENT</h4>
+              <h4>{this.state.counter}</h4>
+            </div>
           </div>
-          <div className='typer-right'>
-            <Typer codeData={data} isRemote remoteState={this.state.otherPlayerState} />
+          <div className='typers'>
+            <div className='typer-left'>
+              <Typer codeData={data} onStateChange={this.playerStateChanged.bind(this)} />
+            </div>
+            <div className='typer-right'>
+              <Typer codeData={data} isRemote remoteState={this.state.otherPlayerState} />
+            </div>
+          </div>
+        </div>
+      )
+    } else if (this.state.gameStage === 'ended') {
+      return (
+        <div className='App'>
+          <h3 className='cGame'>Final Scores:</h3>
+          <div className='finalscore'>
+            <div className='score-container'>
+              <h4>YOU:</h4>
+              <h4>{this.state.score}</h4>
+            </div>
+            <div className='score-container'>
+              <h4>YOUR OPPONENT:</h4>
+              <h4>{this.state.otherScore}</h4>
+            </div>
           </div>
         </div>
       )

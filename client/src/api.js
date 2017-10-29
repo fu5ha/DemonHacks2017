@@ -55,6 +55,13 @@ function onPlayerStateChanged (cb) {
   socket.on('playerStateChanged', data => cb(data.gameId, data.playerId, data.state))
 }
 
+function onCountdownStarted (cb) {
+  socket.on('countdownStarted', () => cb())
+}
+
+function onGameEnded (cb) {
+  socket.on('gameEnded', data => cb(data))
+}
 export default {
   onConnected,
   onPlayerJoinedRoom,
@@ -67,5 +74,7 @@ export default {
   onCountdownReceived,
   onGameStarted,
   playerStateChanged,
-  onPlayerStateChanged
+  onPlayerStateChanged,
+  onCountdownStarted,
+  onGameEnded
 }

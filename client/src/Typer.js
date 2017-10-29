@@ -13,7 +13,8 @@ class Typer extends Component {
       currentLine: 0,
       firstMistake: -1,
       shouldLineReset: false,
-      formattedData: props.codeData.split('\n').map(line => line + '\n')
+      formattedData: props.codeData.split('\n').map(line => line + '\n'),
+      score: 0
     }
   }
   componentWillReceiveProps ({codeData}) {
@@ -41,7 +42,8 @@ class Typer extends Component {
         ...this.state,
         shouldLineReset: true,
         currentLine: this.state.currentLine + 1,
-        charactersTyped: 0
+        charactersTyped: 0,
+        score: this.state.score + this.state.charactersTyped + 1
       })
     } else {
       this.setState({
@@ -50,23 +52,22 @@ class Typer extends Component {
         firstMistake: firstMistake
       })
     }
+    if (!this.state.isRemote) {
+      const currState = {
+        charactersTyped: this.state.charactersTyped,
+        currentLine: this.state.currentLine,
+        firstMistake: this.state.firstMistake,
+        shouldLineReset: this.state.shouldLineReset,
+        score: this.state.score + this.state.charactersTyped
+      }
+      this.props.onStateChange(currState)
+    }
   }
   resetCallback () {
     this.setState({
       ...this.state,
       shouldLineReset: false
     })
-  }
-  componentDidUpdate (prevProp, prevSt) {
-    if (!this.state.isRemote) {
-      const currState = {
-        charactersTyped: this.state.charactersTyped,
-        currentLine: this.state.currentLine,
-        firstMistake: this.state.firstMistake,
-        shouldLineReset: this.state.shouldLineReset
-      }
-      this.props.onStateChange(currState)
-    }
   }
   render () {
     if (this.state.isRemote) {
