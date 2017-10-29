@@ -50,8 +50,10 @@ class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      gameStage: 'join',
-      gameId: -1
+      gameStage: 'home',
+      gameId: -1,
+      gameCanStart: false,
+      errorMessage: ''
     }
   }
   createGameClicked () {
@@ -59,23 +61,64 @@ class App extends React.Component {
       ...this.state,
       gameStage: 'creating'
     })
+    api.createNewGame()
+    api.onNewGameCreated(this.gameCreated.bind(this))
   }
-  gameCreated (id) {
+  gameCreated (data) {
     this.setState({
+      ...this.state,
       gameStage: 'host',
-      gameId: id
+      gameId: data.gameId
+    })
+    api.onPlayerJoinedRoom(this.playerJoinedHost.bind(this))
+  }
+  playerJoinedHost (data) {
+    this.setState({
+      ...this.state,
+      gameCanStart: true
     })
   }
-  joinGameClicked () {
+  joinGameClickedHome () {
+    this.setState({
+      ...this.state,
+      gameStage: 'join'
+    })
+  }
+  joinGameClicked (e) {
+    e.persist()
+    e.preventDefault()
+    this.setState({
+      ...this.state,
+      gameStage: 'joining'
+    })
+    const id = e.target[0].value
+    api.playerJoinGame(id)
+    api.onPlayerJoinedRoom(this.playerJoinedPlayer.bind(this))
+    api.onPlayerFailedToJoinGame(this.playerFailedToJoin.bind(this))
+  }
+  playerFailedToJoin (message) {
+    this.setState({
+      ...this.state,
+      gameStage: 'error',
+      errorMessage: message
+    })
+  }
+  playerJoinedPlayer (data) {
+    this.setState({
+      ...this.state,
+      gameId: data.gameId,
+      gameStage: 'lobby'
+    })
+  }
+  startGameClicked () {
 
   }
   render () {
     if (this.state.gameStage === 'home') {
-      console.log("home")
       return (
         <div>
           <button onClick={this.createGameClicked.bind(this)}>Create Game</button>
-          <button onClick={this.joinGameClicked.bind(this)}>Join Game</button>
+          <button onClick={this.joinGameClickedHome.bind(this)}>Join Game</button>
         </div>
       )
     } else if (this.state.gameStage === 'host') {
@@ -83,7 +126,7 @@ class App extends React.Component {
         <div>
           <h3>Game ID:</h3>
           {this.state.gameId}
-          <button onClick={this.startGameClicked.bind(this)}>Start Game</button>
+          <button disabled={!this.state.gameCanStart} onClick={this.startGameClicked.bind(this)}>Start Game</button>
         </div>
       )
     } else if (this.state.gameStage === 'creating') {
@@ -95,14 +138,18 @@ class App extends React.Component {
         <div>
           <h3>Input Game ID:</h3>
           <form onSubmit={this.joinGameClicked.bind(this)}>
-            <input />
-            <button>Join Game</button>
+            <input type='text' />
+            <button type='submit'>Join Game</button>
           </form>
         </div>
       )
     } else if (this.state.gameStage === 'joining') {
       return (
         <h3>Joining game, please wait</h3>
+      )
+    } else if (this.state.gameStage === 'error') {
+      return (
+        <h3>{this.state.errorMessage}</h3>
       )
     } else if (this.state.gameStage === 'lobby') {
       return (

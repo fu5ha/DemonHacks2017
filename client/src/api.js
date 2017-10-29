@@ -24,5 +24,23 @@ function onReceiveNewPlayerState (cb) {
 }
 
 function createNewGame () {
-  socket.emit('createNewGame');
+  socket.emit('createNewGame')
+}
+
+function playerJoinGame (gameId) {
+  socket.emit('playerJoinGame', {gameId: gameId})
+}
+
+function onPlayerFailedToJoinGame (cb) {
+  socket.on('playerFailedToJoinGame', data => cb(data.message))
+}
+
+export default {
+  onConnected,
+  onPlayerJoinedRoom,
+  onNewGameCreated,
+  onReceiveNewPlayerState,
+  createNewGame,
+  playerJoinGame,
+  onPlayerFailedToJoinGame
 }
