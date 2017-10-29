@@ -5,7 +5,16 @@
     font-size: 1.2em;
 }
 
-pre {
-    margin: 0;
+.typer-left{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
 }
 
+.typer-right{
+    position:absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+}
