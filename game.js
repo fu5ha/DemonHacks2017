@@ -1,5 +1,6 @@
 var io
 var gameSocket
+var state = {}
 exports.initGame = function (sio, socket) {
   io = sio
   gameSocket = socket
@@ -30,18 +31,31 @@ function playerJoinGame (data) {
 
 function startCountdown (data) {
   var count = 5
+  io.sockets.in(data.gameId).emit('countdownStarted')
   io.sockets.in(data.gameId).emit('count', {count: count})
-  var interval = setInterval(function () {
+  state[data.gameId] = {}
+  var countdownInterval = setInterval(function () {
     if (count > 0) {
       count--
       io.sockets.in(data.gameId).emit('count', {count: count})
     } else {
       io.sockets.in(data.gameId).emit('gameStarted')
-      clearInterval(interval)
+      var gameTimer = 5
+      var gameInterval = setInterval(function () {
+        if (gameTimer > 0) {
+          gameTimer--
+          io.sockets.in(data.gameId).emit('count', {count: gameTimer})
+        } else {
+          io.sockets.in(data.gameId).emit('gameEnded', state[data.gameId])
+          clearInterval(gameInterval)
+        }
+      }, 1000)
+      clearInterval(countdownInterval)
     }
   }, 1000)
 }
 
 function playerStateChanged (data) {
   io.sockets.in(data.gameId).emit('playerStateChanged', data)
+  state[data.gameId][data.playerId] = data.state
 }
