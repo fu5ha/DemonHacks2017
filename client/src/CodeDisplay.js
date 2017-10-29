@@ -13,7 +13,7 @@ class CodeDisplay extends React.Component {
     }
   }
   componentDidMount () {
-    this.highlightCode()
+    setTimeout(this.highlightCode.bind(this), 100)
     this.setState({
       ...this.state,
       cachedChildren: this.props.children.toString()
