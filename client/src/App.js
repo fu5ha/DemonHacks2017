@@ -1,5 +1,6 @@
 import React from 'react'
 import Typer from './Typer'
+import api from './api'
 
 import './App.css'
 
@@ -46,17 +47,82 @@ __END__
 POD till the end of file`
 
 class App extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      gameStage: 'join',
+      gameId: -1
+    }
+  }
+  createGameClicked () {
+    this.setState({
+      ...this.state,
+      gameStage: 'creating'
+    })
+  }
+  gameCreated (id) {
+    this.setState({
+      gameStage: 'host',
+      gameId: id
+    })
+  }
+  joinGameClicked () {
+
+  }
   render () {
-    return (
-      <div>
-        <div className='typer-left'>
-          <Typer codeData={data}/>
+    if (this.state.gameStage === 'home') {
+      console.log("home")
+      return (
+        <div>
+          <button onClick={this.createGameClicked.bind(this)}>Create Game</button>
+          <button onClick={this.joinGameClicked.bind(this)}>Join Game</button>
         </div>
-        <div className='typer-right'>
-          <Typer codeData={data}/>
+      )
+    } else if (this.state.gameStage === 'host') {
+      return (
+        <div>
+          <h3>Game ID:</h3>
+          {this.state.gameId}
+          <button onClick={this.startGameClicked.bind(this)}>Start Game</button>
         </div>
-      </div>
-    )
+      )
+    } else if (this.state.gameStage === 'creating') {
+      return (
+        <h3>Creating game, please wait</h3>
+      )
+    } else if (this.state.gameStage === 'join') {
+      return (
+        <div>
+          <h3>Input Game ID:</h3>
+          <form onSubmit={this.joinGameClicked.bind(this)}>
+            <input />
+            <button>Join Game</button>
+          </form>
+        </div>
+      )
+    } else if (this.state.gameStage === 'joining') {
+      return (
+        <h3>Joining game, please wait</h3>
+      )
+    } else if (this.state.gameStage === 'lobby') {
+      return (
+        <h3>Game {this.state.gameId} joined, waiting for host.</h3>
+      )
+    } else if (this.state.gameStage === 'main') {
+      return (
+        <div>
+          <div className='typer-left'>
+            <Typer codeData={data} />
+          </div>
+          <div className='typer-right'>
+            <Typer codeData={data} />
+          </div>
+          <code className='timestamp'>
+            {this.state.timestamp.toString()}
+          </code>
+        </div>
+      )
+    }
   }
 }
 

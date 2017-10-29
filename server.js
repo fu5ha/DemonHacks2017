@@ -91,9 +91,27 @@ function onListening() {
 
 var io = socketio(server)
 
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
+function PlayerManager () {
+    this.player_clients = []
+    this.player_ids = []
+}
+PlayerManager.prototype.registerPlayer = function (client, id) {
+    if (this.player_clients.length < 2) {
+        this.player_clients.push(client);
+        this.player_ids.push(id);
+    }
+    if (this.player_clients.length == 2) {
+        setInterval(() => this.player_clients[0].emit(
+            ''
+        ))
+    }
+}
+
+var manager = new PlayerManager()
+
+io.on('connection', (client) => {
+  client.on('subscribeToOther', (id) => {
+    console.log('client is subscribing to updates with id ', id);
+    manager.registerPlayer(client, id);
   });
 });
