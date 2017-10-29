@@ -145,7 +145,7 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'host') {
       return (
-        <div className ='App'>        
+        <div className='App'>
           <h3 className >Game ID:</h3>
           {this.state.gameId}
           <button disabled={!this.state.gameCanStart} onClick={this.startGameClicked.bind(this)}>Start Game</button>
@@ -153,13 +153,13 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'creating') {
       return (
-        <div className = 'App'>
-          <h3 className = 'cGame'>Creating game, please wait</h3>
+        <div className='App'>
+          <h3 className='cGame'>Creating game, please wait</h3>
         </div>
       )
     } else if (this.state.gameStage === 'join') {
       return (
-        <div className ='App'>        
+        <div className='App'>
           <h3>Input Game ID:</h3>
           <form onSubmit={this.joinGameClicked.bind(this)}>
             <input type='text' />
