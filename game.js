@@ -1,6 +1,22 @@
+var fs = require('fs')
+var path = require('path')
+
 var io
 var gameSocket
 var state = {}
+var fileData = {}
+
+var languages = [
+  'C++',
+  'html',
+  'Java',
+  'JS',
+  'Python',
+  'Ruby',
+  'Rust',
+  'Scala'
+]
+
 exports.initGame = function (sio, socket) {
   io = sio
   gameSocket = socket
@@ -13,8 +29,12 @@ exports.initGame = function (sio, socket) {
 
 function createNewGame () {
   var id = (Math.random() * 100000) | 0
-  this.emit('newGameCreated', {gameId: id, socketId: this.id})
   this.join(id.toString())
+  var language = languages[Math.round(Math.random() * (languages.length - 1))]
+  var files = fs.readdirSync(path.join(__dirname, 'gameFiles', language))
+  var file = files[Math.round(Math.random() * (files.length - 1))]
+  fileData[id] = fs.readFileSync(path.join(__dirname, 'gameFiles', language, file), 'utf8').toString()
+  this.emit('newGameCreated', {gameId: id, socketId: this.id})
 }
 
 function playerJoinGame (data) {
@@ -22,6 +42,7 @@ function playerJoinGame (data) {
 
   if (io.sockets.adapter.rooms[data.gameId] !== undefined) {
     data.socketId = playerSocket.id
+    data.fileData = fileData[data.gameId]
     playerSocket.join(data.gameId)
     io.sockets.in(data.gameId).emit('playerJoinedRoom', data)
   } else {

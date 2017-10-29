@@ -3,7 +3,6 @@
  */
 
 var app = require('./app')
-var socket = require('./sockets')
 var debug = require('debug')('demonhacks2017:server')
 var http = require('http')
 var socketio = require('socket.io')

@@ -59,7 +59,8 @@ class App extends React.Component {
       counter: 5,
       otherPlayerState: {},
       score: 0,
-      otherScore: 0
+      otherScore: 0,
+      fileData: data
     }
     api.onPlayerStateChanged(this.onPlayerStateChanged.bind(this))
   }
@@ -83,6 +84,7 @@ class App extends React.Component {
   playerJoinedHost (data) {
     this.setState({
       ...this.state,
+      fileData: data.fileData,
       gameCanStart: true
     })
   }
@@ -116,6 +118,7 @@ class App extends React.Component {
       ...this.state,
       gameId: data.gameId,
       playerId: data.socketId,
+      fileData: data.fileData,
       gameStage: 'lobby'
     })
     api.onCountdownStarted(this.countdownStarted.bind(this))
@@ -141,6 +144,7 @@ class App extends React.Component {
     })
   }
   gameStarted () {
+    console.log(this.state.fileData)
     this.setState({
       ...this.state,
       gameStage: 'main',
@@ -254,10 +258,10 @@ class App extends React.Component {
           </div>
           <div className='typers'>
             <div className='typer-left'>
-              <Typer codeData={data} onStateChange={this.playerStateChanged.bind(this)} />
+              <Typer codeData={this.state.fileData} onStateChange={this.playerStateChanged.bind(this)} />
             </div>
             <div className='typer-right'>
-              <Typer codeData={data} isRemote remoteState={this.state.otherPlayerState} />
+              <Typer codeData={this.state.fileData} isRemote remoteState={this.state.otherPlayerState} />
             </div>
           </div>
         </div>
