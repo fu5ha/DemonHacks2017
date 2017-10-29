@@ -55,8 +55,10 @@ class App extends React.Component {
       gameCanStart: false,
       errorMessage: '',
       playerId: -1,
-      counter: 5
+      counter: 5,
+      otherPlayerState: {}
     }
+    api.onPlayerStateChanged(this.onPlayerStateChanged.bind(this))
   }
   createGameClicked () {
     this.setState({
@@ -134,6 +136,18 @@ class App extends React.Component {
       gameStage: 'main'
     })
   }
+  playerStateChanged (newState) {
+    api.playerStateChanged(this.state.gameId, this.state.playerId, newState)
+  }
+  onPlayerStateChanged (gameId, playerId, state) {
+    console.log('changed')
+    if (playerId !== this.state.playerId) {
+      this.setState({
+        ...this.state,
+        otherPlayerState: state
+      })
+    }
+  }
   render () {
     if (this.state.gameStage === 'home') {
       return (
@@ -146,7 +160,7 @@ class App extends React.Component {
     } else if (this.state.gameStage === 'host') {
       return (
         <div className='App'>
-          <h3 className >Game ID:</h3>
+          <h3>Game ID:</h3>
           {this.state.gameId}
           <button disabled={!this.state.gameCanStart} onClick={this.startGameClicked.bind(this)}>Start Game</button>
         </div>
@@ -187,10 +201,10 @@ class App extends React.Component {
       return (
         <div>
           <div className='typer-left'>
-            <Typer codeData={data} />
+            <Typer codeData={data} onStateChange={this.playerStateChanged.bind(this)} />
           </div>
           <div className='typer-right'>
-            <Typer codeData={data} />
+            <Typer codeData={data} isRemote remoteState={this.state.otherPlayerState} />
           </div>
         </div>
       )

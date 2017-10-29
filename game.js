@@ -7,6 +7,7 @@ exports.initGame = function (sio, socket) {
   gameSocket.on('createNewGame', createNewGame)
   gameSocket.on('playerJoinGame', playerJoinGame)
   gameSocket.on('startCountdown', startCountdown)
+  gameSocket.on('playerStateChanged', playerStateChanged)
 }
 
 function createNewGame () {
@@ -39,4 +40,8 @@ function startCountdown (data) {
       clearInterval(interval)
     }
   }, 1000)
+}
+
+function playerStateChanged (data) {
+  io.sockets.in(data.gameId).emit('playerStateChanged', data)
 }
