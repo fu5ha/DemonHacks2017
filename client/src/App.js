@@ -197,14 +197,21 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'lobby') {
       return (
-        <h3>Game {this.state.gameId} joined, waiting for host.</h3>
+        <div className='App'>
+          <h3 className='cGame'>Game {this.state.gameId} joined, waiting for host.</h3>
+        </div>
       )
     } else if (this.state.gameStage === 'countdown') {
       return (
-        <h3>Game starting in {this.state.counter}</h3>
+        <div className='App'>
+          <h3 className='cGame'>Game starting in {this.state.counter}</h3>
+        </div>
       )
     } else if (this.state.gameStage === 'main') {
       return (
+        <div>
+        <div className='score'>
+        </div>
         <div>
           <div className='typer-left'>
             <Typer codeData={data} onStateChange={this.playerStateChanged.bind(this)} />
@@ -212,6 +219,7 @@ class App extends React.Component {
           <div className='typer-right'>
             <Typer codeData={data} isRemote remoteState={this.state.otherPlayerState} />
           </div>
+        </div>
         </div>
       )
     }
