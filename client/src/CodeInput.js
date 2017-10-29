@@ -1,4 +1,5 @@
 import React from 'react'
+import './CodeInput.css'
 
 class CodeInput extends React.Component {
   componentWillReceiveProps ({shouldLineReset}) {
@@ -33,7 +34,7 @@ class CodeInput extends React.Component {
   }
   render () {
     return (
-      <input ref={this.setEl.bind(this)} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)} />
+      <input className='inText' ref={this.setEl.bind(this)} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)} />
     )
   }
 }
