@@ -5,27 +5,28 @@ import CodeDisplay from './CodeDisplay.js'
 import './Typer.css'
 
 class Typer extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
+      isRemote: props.isRemote,
       charactersTyped: 0,
       currentLine: 0,
       firstMistake: -1,
       shouldLineReset: false,
-      formattedData: ['']
+      formattedData: props.codeData.split('\n').map(line => line + '\n')
     }
-  }
-  componentDidMount () {
-    this.setState({
-      ...this.state,
-      formattedData: this.props.codeData.split('\n').map(line => line + '\n')
-    })
   }
   componentWillReceiveProps ({codeData}) {
     this.setState({
       ...this.state,
       formattedData: codeData.split('\n').map(line => line + '\n')
     })
+    if (this.state.isRemote) {
+      this.setState({
+        ...this.state,
+        ...this.props.remoteState
+      })
+    }
   }
   increment () {
     this.setState({
@@ -56,20 +57,46 @@ class Typer extends Component {
       shouldLineReset: false
     })
   }
+  componentDidUpdate (prevProp, prevSt) {
+    if (!this.state.isRemote) {
+      const currState = {
+        charactersTyped: this.state.charactersTyped,
+        currentLine: this.state.currentLine,
+        firstMistake: this.state.firstMistake,
+        shouldLineReset: this.state.shouldLineReset
+      }
+      this.props.onStateChange(currState)
+    }
+  }
   render () {
-    return (
-      <div className='App'>
-        <CodeDisplay currentLineIdx={this.state.currentLine} firstMistake={this.state.firstMistake} charactersTyped={this.state.charactersTyped} className='perl'>
-          {
-            this.state.formattedData.slice(
-              0,
-              this.state.currentLine + 2
-            )
-          }
-        </CodeDisplay>
-        <CodeInput shouldLineReset={this.state.shouldLineReset} resetCallback={this.resetCallback.bind(this)} currentLine={this.state.formattedData[this.state.currentLine]} changeCallback={this.codeChanged.bind(this)} />
-      </div>
-    )
+    if (this.state.isRemote) {
+      return (
+        <div className='App'>
+          <CodeDisplay currentLineIdx={this.state.currentLine} firstMistake={this.state.firstMistake} charactersTyped={this.state.charactersTyped} className='perl'>
+            {
+              this.state.formattedData.slice(
+                0,
+                this.state.currentLine + 2
+              )
+            }
+          </CodeDisplay>
+        </div>
+      )
+    } else {
+      return (
+        <div className='App'>
+          <CodeDisplay currentLineIdx={this.state.currentLine} firstMistake={this.state.firstMistake} charactersTyped={this.state.charactersTyped} className='perl'>
+            {
+              this.state.formattedData.slice(
+                0,
+                this.state.currentLine + 2
+              )
+            }
+          </CodeDisplay>
+          <CodeInput shouldLineReset={this.state.shouldLineReset} resetCallback={this.resetCallback.bind(this)} currentLine={this.state.formattedData[this.state.currentLine]} changeCallback={this.codeChanged.bind(this)} />
+        </div>
+      )
+    }
   }
 }
 

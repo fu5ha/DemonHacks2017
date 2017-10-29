@@ -1,5 +1,5 @@
-import openSocket from 'socket.io-client'
-const socket = openSocket('http://localhost:3000')
+import io from 'socket.io-client'
+const socket = io()
 
 // socket.on('newGameCreated', onNewGameCreated)
 // socket.on('playerJoinedRoom', onPlayerJoinedRoom)
@@ -35,6 +35,26 @@ function onPlayerFailedToJoinGame (cb) {
   socket.on('playerFailedToJoinGame', data => cb(data.message))
 }
 
+function startCountdown (id) {
+  socket.emit('startCountdown', {gameId: id})
+}
+
+function onCountdownReceived (cb) {
+  socket.on('count', data => cb(data.count))
+}
+
+function onGameStarted (cb) {
+  socket.on('gameStarted', () => cb())
+}
+
+function playerStateChanged (gameId, playerId, state) {
+  socket.emit('playerStateChanged', {gameId: gameId, playerId: playerId, state: state})
+}
+
+function onPlayerStateChanged (cb) {
+  socket.on('playerStateChanged', data => cb(data.gameId, data.playerId, data.state))
+}
+
 export default {
   onConnected,
   onPlayerJoinedRoom,
@@ -42,5 +62,10 @@ export default {
   onReceiveNewPlayerState,
   createNewGame,
   playerJoinGame,
-  onPlayerFailedToJoinGame
+  onPlayerFailedToJoinGame,
+  startCountdown,
+  onCountdownReceived,
+  onGameStarted,
+  playerStateChanged,
+  onPlayerStateChanged
 }

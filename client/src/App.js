@@ -53,8 +53,12 @@ class App extends React.Component {
       gameStage: 'home',
       gameId: -1,
       gameCanStart: false,
-      errorMessage: ''
+      errorMessage: '',
+      playerId: -1,
+      counter: 5,
+      otherPlayerState: {}
     }
+    api.onPlayerStateChanged(this.onPlayerStateChanged.bind(this))
   }
   createGameClicked () {
     this.setState({
@@ -68,6 +72,7 @@ class App extends React.Component {
     this.setState({
       ...this.state,
       gameStage: 'host',
+      playerId: data.socketId,
       gameId: data.gameId
     })
     api.onPlayerJoinedRoom(this.playerJoinedHost.bind(this))
@@ -107,11 +112,41 @@ class App extends React.Component {
     this.setState({
       ...this.state,
       gameId: data.gameId,
+      playerId: data.socketId,
       gameStage: 'lobby'
     })
+    api.onCountdownReceived(this.countDown.bind(this))
+    api.onGameStarted(this.gameStarted.bind(this))
   }
   startGameClicked () {
-
+    api.startCountdown(this.state.gameId)
+    api.onCountdownReceived(this.countDown.bind(this))
+    api.onGameStarted(this.gameStarted.bind(this))
+  }
+  countDown (count) {
+    this.setState({
+      ...this.state,
+      gameStage: 'countdown',
+      counter: count
+    })
+  }
+  gameStarted () {
+    this.setState({
+      ...this.state,
+      gameStage: 'main'
+    })
+  }
+  playerStateChanged (newState) {
+    api.playerStateChanged(this.state.gameId, this.state.playerId, newState)
+  }
+  onPlayerStateChanged (gameId, playerId, state) {
+    console.log('changed')
+    if (playerId !== this.state.playerId) {
+      this.setState({
+        ...this.state,
+        otherPlayerState: state
+      })
+    }
   }
   render () {
     if (this.state.gameStage === 'home') {
@@ -136,8 +171,8 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'creating') {
       return (
-        <div className = 'App'>
-          <h3 className = 'cGame'>Creating game, please wait</h3>
+        <div className='App'>
+          <h3 className='cGame'>Creating game, please wait</h3>
         </div>
       )
     } else if (this.state.gameStage === 'join') {
@@ -164,18 +199,19 @@ class App extends React.Component {
       return (
         <h3>Game {this.state.gameId} joined, waiting for host.</h3>
       )
+    } else if (this.state.gameStage === 'countdown') {
+      return (
+        <h3>Game starting in {this.state.counter}</h3>
+      )
     } else if (this.state.gameStage === 'main') {
       return (
         <div>
           <div className='typer-left'>
-            <Typer codeData={data} />
+            <Typer codeData={data} onStateChange={this.playerStateChanged.bind(this)} />
           </div>
           <div className='typer-right'>
-            <Typer codeData={data} />
+            <Typer codeData={data} isRemote remoteState={this.state.otherPlayerState} />
           </div>
-          <code className='timestamp'>
-            {this.state.timestamp.toString()}
-          </code>
         </div>
       )
     }

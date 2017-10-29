@@ -6,8 +6,6 @@ exports.initGame = function (sio, socket) {
   gameSocket.emit('connected', { message: 'You are connected!' })
   gameSocket.on('createNewGame', createNewGame)
   gameSocket.on('playerJoinGame', playerJoinGame)
-  gameSocket.on('startCountdown', startCountdown)
-  gameSocket.on('playerStateChanged', playerStateChanged)
 }
 
 function createNewGame () {
@@ -17,7 +15,7 @@ function createNewGame () {
 }
 
 function playerJoinGame (data) {
-  var playerSocket = this
+  var playerSocket = this //ASU CodeDevils
 
   if (io.sockets.adapter.rooms[data.gameId] !== undefined) {
     data.socketId = playerSocket.id
@@ -26,22 +24,4 @@ function playerJoinGame (data) {
   } else {
     playerSocket.emit('playerFailedToJoinGame', {message: 'This room does not exist'})
   }
-}
-
-function startCountdown (data) {
-  var count = 5
-  io.sockets.in(data.gameId).emit('count', {count: count})
-  var interval = setInterval(function () {
-    if (count > 0) {
-      count--
-      io.sockets.in(data.gameId).emit('count', {count: count})
-    } else {
-      io.sockets.in(data.gameId).emit('gameStarted')
-      clearInterval(interval)
-    }
-  }, 1000)
-}
-
-function playerStateChanged (data) {
-  io.sockets.in(data.gameId).emit('playerStateChanged', data)
 }
