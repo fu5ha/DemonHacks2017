@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-const socket = io('http://localhost:3000')
+const socket = io()
 
 // socket.on('newGameCreated', onNewGameCreated)
 // socket.on('playerJoinedRoom', onPlayerJoinedRoom)

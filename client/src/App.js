@@ -1,6 +1,7 @@
 import React from 'react'
 import Typer from './Typer'
 import api from './api'
+import logo from './logo.png'
 
 import './App.css'
 
@@ -179,7 +180,9 @@ class App extends React.Component {
     if (this.state.gameStage === 'home') {
       return (
         <div className='App' >
-          <h1 className='homeName' >Demon Typer</h1>
+          <div className='header'>
+            <img src={logo} alt='logo' />
+          </div>
           <button className='btnCre' onClick={this.createGameClicked.bind(this)}>Create Game</button>
           <button className='btnJoin' onClick={this.joinGameClickedHome.bind(this)}>Join Game</button>
         </div>
@@ -289,7 +292,6 @@ class App extends React.Component {
               <h4>{this.state.otherScore}</h4>
             </div>
           </div>
-        </div>
         </div>
       )
     }

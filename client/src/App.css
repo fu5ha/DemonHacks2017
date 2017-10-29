@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Bebas Neue';
+  src: local('Bebas Neue Bold'), url(./BebasNeue-Bold.woff2) format('woff2');
+}
+
 html, body{
     height: 100%;
     background: #202746;
@@ -42,14 +47,17 @@ div.gameID{
     width: 50%;
 }
 
-h1.homeName{
-    font-family: Helvetica;
-    font-size: 160px;
-    color: #670B17;
+.header{
     text-align: center;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     position: relative;
-    margin-top: 0;
     padding: 20px 0 0 0;
+}
+.header img{
+    max-width: 75%;
 }
 
 h1.homeName:hover{
@@ -103,9 +111,10 @@ button{
     -moz-border-radius: 7;
     radius: 7px;
     border: none;
-    font-family: Courier New;
+    font-family: 'Bebas Neue', 'Helvetica', sans-serif;
+    font-wight: bold;
     color: #ffffff;
-    font-size: 25px;
+    font-size: 36px;
     background: #00B0D3;
     padding: 10px 20px 10px 20px;
     text-decoration: none;

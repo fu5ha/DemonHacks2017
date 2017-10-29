@@ -53,12 +53,13 @@ class Typer extends Component {
       })
     }
     if (!this.state.isRemote) {
+      let scoreBonus = this.state.firstMistake !== -1 ? this.state.firstMistake : this.state.charactersTyped
       const currState = {
         charactersTyped: this.state.charactersTyped,
         currentLine: this.state.currentLine,
         firstMistake: this.state.firstMistake,
         shouldLineReset: this.state.shouldLineReset,
-        score: this.state.score + this.state.charactersTyped
+        score: this.state.score + scoreBonus
       }
       this.props.onStateChange(currState)
     }

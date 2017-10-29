@@ -40,7 +40,7 @@ function startCountdown (data) {
       io.sockets.in(data.gameId).emit('count', {count: count})
     } else {
       io.sockets.in(data.gameId).emit('gameStarted')
-      var gameTimer = 5
+      var gameTimer = 90
       var gameInterval = setInterval(function () {
         if (gameTimer > 0) {
           gameTimer--
