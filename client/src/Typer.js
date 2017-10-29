@@ -8,7 +8,6 @@ class Typer extends Component {
   constructor () {
     super()
     this.state = {
-      displayedLines: 6,
       charactersTyped: 0,
       currentLine: 0,
       firstMistake: -1,
@@ -64,7 +63,7 @@ class Typer extends Component {
           {
             this.state.formattedData.slice(
               0,
-              this.state.currentLine + this.state.displayedLines
+              this.state.currentLine + 2
             )
           }
         </CodeDisplay>
