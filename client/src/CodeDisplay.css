@@ -1,0 +1,17 @@
+.ghost-code {
+  display: block;
+  overflow-x: auto;
+  color: #595e74;
+  padding: 0.5em;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ghost-invis {
+  color: rgba(0,0,0,0);
+}
+
+.ghost-wrong {
+    background: #d91942;
+}
