@@ -226,11 +226,15 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'lobby') {
       return (
-        <h3>Game {this.state.gameId} joined, waiting for host.</h3>
+        <div className='App'>
+          <h3 className='cGame'>Game {this.state.gameId} joined, waiting for host.</h3>
+        </div>
       )
     } else if (this.state.gameStage === 'countdown') {
       return (
-        <h3>Game starting in {this.state.counter}</h3>
+        <div className='App'>
+          <h3 className='cGame'>Game starting in {this.state.counter}</h3>
+        </div>
       )
     } else if (this.state.gameStage === 'main') {
       return (
@@ -269,6 +273,23 @@ class App extends React.Component {
               <h4>{this.state.otherScore}</h4>
             </div>
           </div>
+        </div>
+      )
+    } else if (this.state.gameStage === 'ended') {
+      return (
+        <div className='App'>
+          <h3 className='cGame'>Final Scores:</h3>
+          <div className='finalscore'>
+            <div className='score-container'>
+              <h4>YOU:</h4>
+              <h4>{this.state.score}</h4>
+            </div>
+            <div className='score-container'>
+              <h4>YOUR OPPONENT:</h4>
+              <h4>{this.state.otherScore}</h4>
+            </div>
+          </div>
+        </div>
         </div>
       )
     }

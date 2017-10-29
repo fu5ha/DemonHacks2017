@@ -13,6 +13,11 @@ div.App{
     color: #979db4;
 }
 
+div.waiting{
+    background: #475E89;
+    height: 100%;   
+}
+
 div.gameID{
     text-align: center;
     margin-top: 35px;
