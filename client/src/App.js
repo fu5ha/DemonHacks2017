@@ -159,10 +159,14 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'host') {
       return (
-        <div className='App'>
-          <h3>Game ID:</h3>
-          {this.state.gameId}
-          <button disabled={!this.state.gameCanStart} onClick={this.startGameClicked.bind(this)}>Start Game</button>
+        <div className ='App'>        
+          <h3 className = 'cGame'>Game ID:</h3>
+          <div className = 'gameID'>
+            {this.state.gameId}
+          </div>
+          <div className='btnDIV'>
+            <button className ='btnStart' disabled={!this.state.gameCanStart} onClick={this.startGameClicked.bind(this)}>Start Game</button>
+          </div>
         </div>
       )
     } else if (this.state.gameStage === 'creating') {
@@ -173,11 +177,13 @@ class App extends React.Component {
       )
     } else if (this.state.gameStage === 'join') {
       return (
-        <div className='App'>
-          <h3>Input Game ID:</h3>
+        <div className ='App'>        
+          <h3 className='cGame'>Input Game ID:</h3>
           <form onSubmit={this.joinGameClicked.bind(this)}>
-            <input type='text' />
-            <button type='submit'>Join Game</button>
+            <div className='btnDIV2'>
+              <input className='inBox' type='text' />
+              <button className='btnJoin2' type='submit'>Join Game</button>
+            </div>
           </form>
         </div>
       )
