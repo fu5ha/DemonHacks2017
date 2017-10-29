@@ -53,7 +53,9 @@ class App extends React.Component {
       gameStage: 'home',
       gameId: -1,
       gameCanStart: false,
-      errorMessage: ''
+      errorMessage: '',
+      playerId: -1,
+      counter: 5
     }
   }
   createGameClicked () {
@@ -68,6 +70,7 @@ class App extends React.Component {
     this.setState({
       ...this.state,
       gameStage: 'host',
+      playerId: data.socketId,
       gameId: data.gameId
     })
     api.onPlayerJoinedRoom(this.playerJoinedHost.bind(this))
@@ -107,11 +110,29 @@ class App extends React.Component {
     this.setState({
       ...this.state,
       gameId: data.gameId,
+      playerId: data.socketId,
       gameStage: 'lobby'
     })
+    api.onCountdownReceived(this.countDown.bind(this))
+    api.onGameStarted(this.gameStarted.bind(this))
   }
   startGameClicked () {
-
+    api.startCountdown(this.state.gameId)
+    api.onCountdownReceived(this.countDown.bind(this))
+    api.onGameStarted(this.gameStarted.bind(this))
+  }
+  countDown (count) {
+    this.setState({
+      ...this.state,
+      gameStage: 'countdown',
+      counter: count
+    })
+  }
+  gameStarted () {
+    this.setState({
+      ...this.state,
+      gameStage: 'main'
+    })
   }
   render () {
     if (this.state.gameStage === 'home') {
@@ -158,6 +179,10 @@ class App extends React.Component {
       return (
         <h3>Game {this.state.gameId} joined, waiting for host.</h3>
       )
+    } else if (this.state.gameStage === 'countdown') {
+      return (
+        <h3>Game starting in {this.state.counter}</h3>
+      )
     } else if (this.state.gameStage === 'main') {
       return (
         <div>
@@ -167,9 +192,6 @@ class App extends React.Component {
           <div className='typer-right'>
             <Typer codeData={data} />
           </div>
-          <code className='timestamp'>
-            {this.state.timestamp.toString()}
-          </code>
         </div>
       )
     }

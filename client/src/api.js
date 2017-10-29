@@ -35,6 +35,18 @@ function onPlayerFailedToJoinGame (cb) {
   socket.on('playerFailedToJoinGame', data => cb(data.message))
 }
 
+function startCountdown (id) {
+  socket.emit('startCountdown', {gameId: id})
+}
+
+function onCountdownReceived (cb) {
+  socket.on('count', data => cb(data.count))
+}
+
+function onGameStarted (cb) {
+  socket.on('gameStarted', () => cb())
+}
+
 export default {
   onConnected,
   onPlayerJoinedRoom,
@@ -42,5 +54,8 @@ export default {
   onReceiveNewPlayerState,
   createNewGame,
   playerJoinGame,
-  onPlayerFailedToJoinGame
+  onPlayerFailedToJoinGame,
+  startCountdown,
+  onCountdownReceived,
+  onGameStarted
 }
