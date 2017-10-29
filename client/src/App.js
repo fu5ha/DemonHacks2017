@@ -50,7 +50,7 @@ class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      gameStage: 'join',
+      gameStage: 'home',
       gameId: -1
     }
   }
@@ -73,26 +73,29 @@ class App extends React.Component {
     if (this.state.gameStage === 'home') {
       console.log("home")
       return (
-        <div>
-          <button onClick={this.createGameClicked.bind(this)}>Create Game</button>
-          <button onClick={this.joinGameClicked.bind(this)}>Join Game</button>
+        <div className ='App' >
+          <h1 className = 'homeName' >Demon Typer</h1>
+          <button className = 'btnCre' onClick={this.createGameClicked.bind(this)}>Create Game</button>
+          <button className = 'btnJoin' onClick={this.joinGameClicked.bind(this)}>Join Game</button>
         </div>
       )
     } else if (this.state.gameStage === 'host') {
       return (
-        <div>
-          <h3>Game ID:</h3>
+        <div className ='App'>        
+          <h3 className >Game ID:</h3>
           {this.state.gameId}
           <button onClick={this.startGameClicked.bind(this)}>Start Game</button>
         </div>
       )
     } else if (this.state.gameStage === 'creating') {
       return (
-        <h3>Creating game, please wait</h3>
+        <div className = 'App'>
+          <h3 className = 'cGame'>Creating game, please wait</h3>
+        </div>
       )
     } else if (this.state.gameStage === 'join') {
       return (
-        <div>
+        <div className ='App'>        
           <h3>Input Game ID:</h3>
           <form onSubmit={this.joinGameClicked.bind(this)}>
             <input />
