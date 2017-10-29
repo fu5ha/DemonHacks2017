@@ -1,6 +1,8 @@
+html, body{
+    height: 100%;
+}
 div{
     margin: 0;
-    background: #06D2CE;
 }
 div.App{
     width: 100%;
@@ -10,6 +12,11 @@ div.App{
     color: #979db4;
 }
 
+div.gameID{
+    text-align: center;
+    margin-top: 35px;
+    font-size: 34px;
+}
 
 .typer-left{
     position: absolute;
@@ -47,6 +54,33 @@ h3.cGame{
     margin-top: 0;
     position: relative;
     background-color: transparent;
+}
+
+div.btnDIV{
+    justify-content: center;
+    display: flex;
+}
+
+div.btnDIV2{
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
+    height: 100%;
+}
+
+.inBox{
+    flex-shrink: 1;
+    margin: 9% 40% 0 40%;
+}
+
+.btnJoin2{
+    flex-shrink: 1;
+    margin-left: auto;
+    margin-right: auto;
+}
+button.btnStart{ 
+    margin-top: 9%;
+    flex-shrink: 1;
 }
 
 button{
