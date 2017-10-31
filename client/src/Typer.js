@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
-import keydown, { ALL_KEYS } from 'react-keydown'
 import CodeInput from './CodeInput.js'
 import CodeDisplay from './CodeDisplay.js'
 import './Typer.css'
+
+function formatData (code) {
+  return code.split('\n').map(line => {
+    if (line === '') {
+      return ' \n'
+    } else {
+      return line + '\n'
+    }
+  })
+}
 
 class Typer extends Component {
   constructor (props) {
@@ -13,19 +22,15 @@ class Typer extends Component {
       currentLine: 0,
       firstMistake: -1,
       shouldLineReset: false,
-      formattedData: props.codeData.split('\n').map(line => line + '\n'),
+      formattedData: formatData(props.codeData),
       score: 0
     }
   }
-  componentWillReceiveProps ({codeData}) {
-    this.setState({
-      ...this.state,
-      formattedData: codeData.split('\n').map(line => line + '\n')
-    })
+  componentWillReceiveProps ({remoteState}) {
     if (this.state.isRemote) {
       this.setState({
         ...this.state,
-        ...this.props.remoteState
+        ...remoteState
       })
     }
   }
@@ -35,9 +40,10 @@ class Typer extends Component {
       lines: this.state.lines + 1
     })
   }
-  codeChanged (charsTyped, firstMistake, isEnter) {
+  codeChanged (charsTyped, firstMistake) {
     const lineLength = this.state.formattedData[this.state.currentLine].length
-    if (charsTyped === lineLength - 1 && firstMistake === -1 && isEnter) {
+    console.log('length: ' + lineLength + ' typed: ' + charsTyped)
+    if (charsTyped === lineLength - 2 && firstMistake === -1) {
       this.setState({
         ...this.state,
         shouldLineReset: true,
@@ -74,11 +80,11 @@ class Typer extends Component {
     if (this.state.isRemote) {
       return (
         <div className='App'>
-          <CodeDisplay currentLineIdx={this.state.currentLine} firstMistake={this.state.firstMistake} charactersTyped={this.state.charactersTyped} className='perl'>
+          <CodeDisplay currentLineIdx={this.state.currentLine} firstMistake={this.state.firstMistake} charactersTyped={this.state.charactersTyped}>
             {
               this.state.formattedData.slice(
-                0,
-                this.state.currentLine + 2
+                this.state.currentLine,
+                this.state.currentLine + 6
               )
             }
           </CodeDisplay>
@@ -87,11 +93,11 @@ class Typer extends Component {
     } else {
       return (
         <div className='App'>
-          <CodeDisplay currentLineIdx={this.state.currentLine} firstMistake={this.state.firstMistake} charactersTyped={this.state.charactersTyped} className='perl'>
+          <CodeDisplay currentLineIdx={this.state.currentLine} firstMistake={this.state.firstMistake} charactersTyped={this.state.charactersTyped}>
             {
               this.state.formattedData.slice(
-                0,
-                this.state.currentLine + 2
+                this.state.currentLine,
+                this.state.currentLine + 6
               )
             }
           </CodeDisplay>
@@ -102,4 +108,4 @@ class Typer extends Component {
   }
 }
 
-export default keydown(ALL_KEYS)(Typer)
+export default Typer

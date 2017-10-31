@@ -5,11 +5,12 @@
   padding: 0.5em;
   position: absolute;
   top: 0;
-  left: 0;
+  opacity: 100%;
 }
 
 .ghost-invis {
   color: rgba(0,0,0,0);
+  background: rgba(76,219,131,0.15);
 }
 
 .ghost-wrong {

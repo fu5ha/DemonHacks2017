@@ -59,7 +59,15 @@ class CodeDisplay extends React.Component {
 
     return (
       <div>
-        <pre ref={this.setEl.bind(this)}><code className={className}>{children}</code></pre>
+        <pre ref={this.setEl.bind(this)}><code className={className}>
+          {
+            children.map((line, idx) => {
+              return (
+                <span key={'hlline' + idx}>{line}</span>
+              )
+            })
+          }
+        </code></pre>
         <pre><code className='ghost-code'>
           {
             children.map((line, idx) => {
@@ -80,7 +88,7 @@ class CodeDisplay extends React.Component {
                 ghostPart = line
               }
               return (
-                <span key={idx}>
+                <span key={'ghostline' + idx}>
                   <span className='ghost-invis'>{colorPart}</span>
                   <span className='ghost-wrong'>{wrongPart}</span>
                   {ghostPart}

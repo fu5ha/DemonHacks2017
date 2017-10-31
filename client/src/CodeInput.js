@@ -9,6 +9,10 @@ class CodeInput extends React.Component {
     }
   }
   handleChange (e) {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      e.target.value = e.target.value + '  '
+    }
     const charactersTyped = e.target.value.length
     let firstMistake = -1
     for (let i = 0; i < charactersTyped; i++) {
@@ -17,11 +21,14 @@ class CodeInput extends React.Component {
         break
       }
     }
-    this.props.changeCallback(charactersTyped, firstMistake, e.key === 'Enter')
+    this.props.changeCallback(charactersTyped, firstMistake)
   }
   onKeyDown (e) {
     if (e.key === 'Backspace' || e.key === 'Enter') {
       this.handleChange(e)
+    }
+    if (e.key === 'Tab') {
+      e.preventDefault()
     }
   }
   onKeyUp (e) {
