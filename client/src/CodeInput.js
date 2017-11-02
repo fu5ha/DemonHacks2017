@@ -33,7 +33,7 @@ class CodeInput extends React.Component {
   }
   render () {
     return (
-      <input className='inText' ref={this.setEl.bind(this)} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)} />
+      <input autoFocus className='inText' ref={this.setEl.bind(this)} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)} />
     )
   }
 }

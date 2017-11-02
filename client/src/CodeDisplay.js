@@ -18,6 +18,8 @@ class CodeDisplay extends React.Component {
       ...this.state,
       cachedChildren: this.props.children.toString()
     })
+
+    this.el.addEventListener('scroll', this.handleScroll.bind(this))
   }
 
   componentWillReceiveProps ({children, shouldLineReset}) {
@@ -54,12 +56,17 @@ class CodeDisplay extends React.Component {
     this.el = el
   }
 
+  handleScroll (e) {
+    this.ghostEl.setAttribute('style', 'left: ' + this.el.getBoundingClientRect().left)
+    console.log('scroll')
+  }
+
   render () {
     const {children, className} = this.props
 
     return (
-      <div>
-        <pre ref={this.setEl.bind(this)}><code className={className}>
+      <div className='code-display-wrapper'>
+        <pre ref={this.setEl.bind(this)} className='highlighted-code'><code className={className}>
           {
             children.map((line, idx) => {
               return (
@@ -68,7 +75,7 @@ class CodeDisplay extends React.Component {
             })
           }
         </code></pre>
-        <pre><code className='ghost-code'>
+        <pre ref={(code) => { this.ghostEl = code }} className='ghost-code'><code>
           {
             children.map((line, idx) => {
               let ghostPart = ''

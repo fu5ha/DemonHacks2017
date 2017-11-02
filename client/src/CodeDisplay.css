@@ -1,6 +1,11 @@
+.code-display-wrapper {
+  width: 100%;
+}
+.highlighted-code {
+}
 .ghost-code {
   display: block;
-  overflow-x: auto;
+  overflow: scroll;
   color: #595e74;
   padding: 0.5em;
   position: absolute;

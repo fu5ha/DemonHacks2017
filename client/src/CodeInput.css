@@ -1,8 +1,14 @@
 .inText{
     width: 97%;
     background: #303756;
-    border: 1px solid #979db4;
+    border: 1px solid #575d74;
     outline: none;
     radius: 5px;
-    color: #979db4;
+    color: #676d84;
+    font-family: monospace;
+    font-size: 1.2em;
+}
+.inText:focus {
+    border: 1px solid #777d94;
+    color: #878da4;
 }

@@ -176,7 +176,7 @@ class App extends React.Component {
           <h3 className='cGame'>Input Game ID:</h3>
           <form onSubmit={this.joinGameClicked.bind(this)}>
             <div className='btnDIV2'>
-              <input className='inBox' type='text' />
+              <input className='inBox' type='text' autoFocus />
               <button className='btnJoin2' type='submit'>Join Game</button>
             </div>
           </form>
@@ -205,14 +205,17 @@ class App extends React.Component {
     } else if (this.state.gameStage === 'main') {
       return (
         <div className='App'>
+          <div className='finalscore'>
+            <div className='score-container'>
+              <h4>Time Left: {this.state.counter}</h4>
+            </div>
+          </div>
           <div className='score'>
             <div className='score-container'>
-              <h4>YOU</h4>
-              <h4>{this.state.counter}</h4>
+              <h4>You</h4>
             </div>
             <div className='score-container'>
-              <h4>YOUR OPPONENT</h4>
-              <h4>{this.state.counter}</h4>
+              <h4>Your Opponent</h4>
             </div>
           </div>
           <div className='typers'>
@@ -231,11 +234,11 @@ class App extends React.Component {
           <h3 className='cGame'>Final Scores:</h3>
           <div className='finalscore'>
             <div className='score-container'>
-              <h4>YOU:</h4>
+              <h4>You:</h4>
               <h4>{this.state.score}</h4>
             </div>
             <div className='score-container'>
-              <h4>YOUR OPPONENT:</h4>
+              <h4>Your Opponent:</h4>
               <h4>{this.state.otherScore}</h4>
             </div>
           </div>

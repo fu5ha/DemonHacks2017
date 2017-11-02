@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-const socket = io()
+const socket = io('localhost:3000')
 
 function onConnected (cb) {
   socket.on('connected', () => cb(socket.socket.sessionid))

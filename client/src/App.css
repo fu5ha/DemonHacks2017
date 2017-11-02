@@ -160,7 +160,7 @@ button.btnJoin{
     width: 50%;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding-left: 10px;
     padding-right: 10px;
